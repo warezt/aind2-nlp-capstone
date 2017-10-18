@@ -1,0 +1,93 @@
+==BASIC PUTTY INTERFACE==
+mouse drag = Copy
+right click = paste
+
+==For Putty Command Public DNS==
+aind2@ec2-13-210-66-109.ap-southeast-2.compute.amazonaws.com
+==On prompt; password aind2
+
+====On terminal; INSTALLATION 
+git clone https://github.com/udacity/aind2-nlp-capstone
+cd aind2-nlp-capstone
+conda create --name aind-nlp-capstone python=3.5 numpy
+source activate aind-nlp-capstone
+====On terminal; UPDATE Tensorflow and Keras
+pip install tensorflow-gpu -U
+pip install keras -U
+
+====On terminal; FOR WORK
+cd aind2-nlp-capstone
+source activate aind-nlp-capstone
+KERAS_BACKEND=tensorflow python -c "from keras import backend"
+jupyter notebook --ip=0.0.0.0 --no-browser
+
+
+====For LOCAL computer
+cd C:\Users\warezt\Source\Repos\aind2-nlp-capstone
+activate aind-nlp-capstone
+set KERAS_BACKEND=tensorflow
+python -c "from keras import backend"
+jupyter notebook machine_translation.ipynb
+
+
+==============FOR TEST
+cd C:\Users\warezt\Source\Repos\aind2-nlp-capstone
+
+activate aind-nlp-capstone
+set KERAS_BACKEND=tensorflow
+python -c "from keras import backend"
+python
+
+text_sentences = ['The quick brown fox jumps over the lazy dog .','By Jove , my quick study of lexicography won a prize .','This is a short sentence .']
+sentences = ['The quick brown fox jumps over the lazy dog .','By Jove , my quick study of lexicography won a prize .','This is a short sentence .']
+import project_tests as tests
+from keras.preprocessing.text import Tokenizer
+
+
+def tokenize(x):
+    """
+    Tokenize x
+    :param x: List of sentences/strings to be tokenized
+    :return: Tuple of (tokenized x data, tokenizer used to tokenize x)
+    """
+    # TODO: Implement
+    tk=Tokenizer()
+    tk.fit_on_texts(x)
+    return tk.texts_to_sequences(x), tk
+tests.test_tokenize(tokenize)
+
+# Tokenize Example output 
+text_sentences = [
+    'The quick brown fox jumps over the lazy dog .',
+    'By Jove , my quick study of lexicography won a prize .',
+    'This is a short sentence .']
+text_tokenized, text_tokenizer = tokenize(text_sentences)
+print(text_tokenizer.word_index)
+print()
+for sample_i, (sent, token_sent) in enumerate(zip(text_sentences, text_tokenized)):
+    print('Sequence {} in x'.format(sample_i + 1))
+    print('  Input:  {}'.format(sent))
+    print('  Output: {}'.format(token_sent))
+
+import numpy as np
+from keras.preprocessing.sequence import pad_sequences
+
+
+def pad(x, length=None):
+    """
+    Pad x
+    :param x: List of sequences.
+    :param length: Length to pad the sequence to.  If None, use length of longest sequence in x.
+    :return: Padded numpy array of sequences
+    """
+    # TODO: Implement
+    
+    return pad_sequences(x,maxlen=length,padding='post',value=0)
+tests.test_pad(pad)
+
+# Pad Tokenized output
+test_pad = pad(text_tokenized)
+for sample_i, (token_sent, pad_sent) in enumerate(zip(text_tokenized, test_pad)):
+    print('Sequence {} in x'.format(sample_i + 1))
+    print('  Input:  {}'.format(np.array(token_sent)))
+    print('  Output: {}'.format(pad_sent))
