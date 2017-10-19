@@ -87,7 +87,7 @@ def test_bd_model(bd_model):
     input_shape = (137861, 21, 1)
     output_sequence_length = 21
     english_vocab_size = 199
-    french_vocab_size = 344
+    french_vocab_size = 345#Fixed from 344
 
     model = bd_model(input_shape, output_sequence_length, english_vocab_size, french_vocab_size)
     _test_model(model, input_shape, output_sequence_length, french_vocab_size)
@@ -97,7 +97,7 @@ def test_model_final(model_final):
     input_shape = (137861, 15)
     output_sequence_length = 21
     english_vocab_size = 199
-    french_vocab_size = 344
+    french_vocab_size = 345#Fixed from 344
 
     model = model_final(input_shape, output_sequence_length, english_vocab_size, french_vocab_size)
     _test_model(model, input_shape, output_sequence_length, french_vocab_size)
