@@ -12,6 +12,7 @@ cd aind2-nlp-capstone
 conda create --name aind-nlp-capstone python=3.5 numpy
 source activate aind-nlp-capstone
 ====On terminal; UPDATE Tensorflow and Keras
+conda install scipy
 pip install tensorflow-gpu -U
 pip install keras -U
 
@@ -23,7 +24,7 @@ jupyter notebook --ip=0.0.0.0 --no-browser
 
 
 ====For LOCAL computer
-cd C:\Users\warezt\Source\Repos\aind2-nlp-capstone
+cd C:\Users\User\Source\Repos\aind2-nlp-capstone
 activate aind-nlp-capstone
 set KERAS_BACKEND=tensorflow
 python -c "from keras import backend"
