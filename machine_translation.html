@@ -12014,7 +12014,7 @@ small_vocab_fr Line 2:  les Ã©tats-unis est gÃ©nÃ©ralement froid en juille
 
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>{&#39;study&#39;: 13, &#39;quick&#39;: 2, &#39;short&#39;: 20, &#39;fox&#39;: 5, &#39;of&#39;: 14, &#39;the&#39;: 1, &#39;won&#39;: 16, &#39;jove&#39;: 11, &#39;sentence&#39;: 21, &#39;brown&#39;: 4, &#39;jumps&#39;: 6, &#39;prize&#39;: 17, &#39;dog&#39;: 9, &#39;my&#39;: 12, &#39;over&#39;: 7, &#39;a&#39;: 3, &#39;by&#39;: 10, &#39;lexicography&#39;: 15, &#39;this&#39;: 18, &#39;lazy&#39;: 8, &#39;is&#39;: 19}
+<pre>{&#39;this&#39;: 18, &#39;won&#39;: 16, &#39;dog&#39;: 9, &#39;is&#39;: 19, &#39;lexicography&#39;: 15, &#39;sentence&#39;: 21, &#39;quick&#39;: 2, &#39;jove&#39;: 11, &#39;by&#39;: 10, &#39;jumps&#39;: 6, &#39;brown&#39;: 4, &#39;prize&#39;: 17, &#39;lazy&#39;: 8, &#39;study&#39;: 13, &#39;a&#39;: 3, &#39;over&#39;: 7, &#39;my&#39;: 12, &#39;the&#39;: 1, &#39;fox&#39;: 5, &#39;of&#39;: 14, &#39;short&#39;: 20}
 
 Sequence 1 in x
   Input:  The quick brown fox jumps over the lazy dog .
@@ -12738,7 +12738,7 @@ paris est est jamais en en et il il est est en en &lt;PAD&gt; &lt;PAD&gt; &lt;PA
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[15]:</div>
+<div class="prompt input_prompt">In&nbsp;[14]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">from</span> <span class="nn">keras.layers</span> <span class="k">import</span> <span class="n">GRU</span><span class="p">,</span> <span class="n">Input</span><span class="p">,</span> <span class="n">Dense</span><span class="p">,</span> <span class="n">TimeDistributed</span><span class="p">,</span><span class="n">SimpleRNN</span>
@@ -12760,15 +12760,20 @@ paris est est jamais en en et il il est est en en &lt;PAD&gt; &lt;PAD&gt; &lt;PA
 <span class="sd">    :return: Keras model built, but not trained</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="c1"># TODO: Implement</span>
-    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.001</span>
+    <span class="n">learning_rate</span><span class="o">=</span><span class="mf">0.005</span>   <span class="c1"># Inc learning rate from 0.001. This greatly increase accuracy. I think I used too low learning rate</span>
     <span class="n">model</span> <span class="o">=</span> <span class="n">Sequential</span><span class="p">()</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Embedding</span><span class="p">(</span><span class="n">english_vocab_size</span><span class="p">,</span><span class="nb">round</span><span class="p">(</span><span class="n">english_vocab_size</span><span class="o">/</span><span class="mi">5</span><span class="p">),</span><span class="n">input_shape</span><span class="o">=</span><span class="n">input_shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span>
     <span class="c1"># Word embedding of one-fifth due to synonyms</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">SimpleRNN</span><span class="p">(</span><span class="n">output_sequence_length</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">False</span><span class="p">,)))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">GRU</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">False</span><span class="p">,)))</span>
+    <span class="c1">#Change neural unit to 512</span>
+    <span class="c1">#Changed from SimpleRNN to GRU</span>
     <span class="c1">#Do not returnsequence to feed to next network</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">RepeatVector</span><span class="p">(</span><span class="n">output_sequence_length</span><span class="p">))</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">SimpleRNN</span><span class="p">(</span><span class="n">output_sequence_length</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,)))</span>
-    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Dropout</span><span class="p">(</span><span class="mf">0.2</span><span class="p">))</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Bidirectional</span><span class="p">(</span><span class="n">GRU</span><span class="p">(</span><span class="mi">512</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;tanh&#39;</span><span class="p">,</span><span class="n">return_sequences</span><span class="o">=</span><span class="kc">True</span><span class="p">,)))</span>
+    <span class="c1">#Change neural unit to 512</span>
+    <span class="c1">#Changed from SimpleRNN to GRU, it slightly reduce accuracy. However, result is not saturated and it is not apple to apple result.</span>
+    <span class="c1">#model.add(Dropout(0.2))</span>
+    <span class="c1">#Remove dropout</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">french_vocab_size</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;relu&#39;</span><span class="p">)))</span>
     <span class="n">model</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">TimeDistributed</span><span class="p">(</span><span class="n">Dense</span><span class="p">(</span><span class="n">french_vocab_size</span><span class="p">,</span><span class="n">activation</span><span class="o">=</span><span class="s1">&#39;softmax&#39;</span><span class="p">)))</span>
     
@@ -12814,7 +12819,7 @@ paris est est jamais en en et il il est est en en &lt;PAD&gt; &lt;PAD&gt; &lt;PA
 </div>
 <div class="cell border-box-sizing code_cell rendered">
 <div class="input">
-<div class="prompt input_prompt">In&nbsp;[16]:</div>
+<div class="prompt input_prompt">In&nbsp;[15]:</div>
 <div class="inner_cell">
     <div class="input_area">
 <div class=" highlight hl-ipython3"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
@@ -12836,7 +12841,7 @@ paris est est jamais en en et il il est est en en &lt;PAD&gt; &lt;PAD&gt; &lt;PA
     <span class="nb">len</span><span class="p">(</span><span class="n">x_tk</span><span class="o">.</span><span class="n">word_index</span><span class="p">),</span>
     <span class="nb">len</span><span class="p">(</span><span class="n">y_tk</span><span class="o">.</span><span class="n">word_index</span><span class="p">))</span>
     
-    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+    <span class="n">model</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">batch_size</span><span class="o">=</span><span class="mi">1024</span><span class="p">,</span> <span class="n">epochs</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span> <span class="n">validation_split</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span><span class="c1">#Increase epochs to 50</span>
 
     <span class="c1"># Print prediction(s)</span>
     <span class="nb">print</span><span class="p">(</span><span class="n">logits_to_text</span><span class="p">(</span><span class="n">model</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">[:</span><span class="mi">1</span><span class="p">])[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y_tk</span><span class="p">))</span>
@@ -12878,32 +12883,52 @@ paris est est jamais en en et il il est est en en &lt;PAD&gt; &lt;PAD&gt; &lt;PA
 
 <div class="output_subarea output_stream output_stdout output_text">
 <pre>Train on 110288 samples, validate on 27573 samples
-Epoch 1/10
-110288/110288 [==============================] - 5s - loss: 3.1749 - acc: 0.4162 - val_loss: nan - val_acc: 0.4964
-Epoch 2/10
-110288/110288 [==============================] - 4s - loss: 1.8518 - acc: 0.5409 - val_loss: nan - val_acc: 0.6038
-Epoch 3/10
-110288/110288 [==============================] - 4s - loss: 1.4516 - acc: 0.6138 - val_loss: nan - val_acc: 0.6572
-Epoch 4/10
-110288/110288 [==============================] - 4s - loss: 1.2756 - acc: 0.6501 - val_loss: nan - val_acc: 0.6880
-Epoch 5/10
-110288/110288 [==============================] - 4s - loss: 1.1719 - acc: 0.6727 - val_loss: nan - val_acc: 0.7040
-Epoch 6/10
-110288/110288 [==============================] - 4s - loss: 1.1061 - acc: 0.6869 - val_loss: nan - val_acc: 0.7118
-Epoch 7/10
-110288/110288 [==============================] - 4s - loss: 1.0601 - acc: 0.6972 - val_loss: nan - val_acc: 0.7239
-Epoch 8/10
-110288/110288 [==============================] - 4s - loss: 1.0217 - acc: 0.7060 - val_loss: nan - val_acc: 0.7322
-Epoch 9/10
-110288/110288 [==============================] - 4s - loss: 0.9891 - acc: 0.7138 - val_loss: nan - val_acc: 0.7395
-Epoch 10/10
-110288/110288 [==============================] - 4s - loss: 0.9670 - acc: 0.7191 - val_loss: nan - val_acc: 0.7467
-new jersey est parfois chaud au mois mais il est est en en en &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
+Epoch 1/20
+110288/110288 [==============================] - 32s - loss: 2.3556 - acc: 0.5026 - val_loss: nan - val_acc: 0.5760
+Epoch 2/20
+110288/110288 [==============================] - 27s - loss: 1.1167 - acc: 0.6876 - val_loss: nan - val_acc: 0.7397
+Epoch 3/20
+110288/110288 [==============================] - 27s - loss: 0.7096 - acc: 0.7843 - val_loss: nan - val_acc: 0.8296
+Epoch 4/20
+110288/110288 [==============================] - 27s - loss: 0.4520 - acc: 0.8629 - val_loss: nan - val_acc: 0.9037
+Epoch 5/20
+110288/110288 [==============================] - 27s - loss: 0.2553 - acc: 0.9229 - val_loss: nan - val_acc: 0.9331
+Epoch 6/20
+110288/110288 [==============================] - 27s - loss: 0.1751 - acc: 0.9463 - val_loss: nan - val_acc: 0.9518
+Epoch 7/20
+110288/110288 [==============================] - 27s - loss: 0.1312 - acc: 0.9592 - val_loss: nan - val_acc: 0.9599
+Epoch 8/20
+110288/110288 [==============================] - 27s - loss: 0.1023 - acc: 0.9683 - val_loss: nan - val_acc: 0.9642
+Epoch 9/20
+110288/110288 [==============================] - 27s - loss: 0.0919 - acc: 0.9717 - val_loss: nan - val_acc: 0.9669
+Epoch 10/20
+110288/110288 [==============================] - 27s - loss: 0.0800 - acc: 0.9753 - val_loss: nan - val_acc: 0.9669
+Epoch 11/20
+110288/110288 [==============================] - 27s - loss: 0.0703 - acc: 0.9786 - val_loss: nan - val_acc: 0.9743
+Epoch 12/20
+110288/110288 [==============================] - 27s - loss: 0.0603 - acc: 0.9817 - val_loss: nan - val_acc: 0.9745
+Epoch 13/20
+110288/110288 [==============================] - 27s - loss: 0.0549 - acc: 0.9835 - val_loss: nan - val_acc: 0.9725
+Epoch 14/20
+110288/110288 [==============================] - 27s - loss: 0.0545 - acc: 0.9837 - val_loss: nan - val_acc: 0.9772
+Epoch 15/20
+110288/110288 [==============================] - 27s - loss: 0.0503 - acc: 0.9849 - val_loss: nan - val_acc: 0.9691
+Epoch 16/20
+110288/110288 [==============================] - 27s - loss: 0.0534 - acc: 0.9842 - val_loss: nan - val_acc: 0.9775
+Epoch 17/20
+110288/110288 [==============================] - 27s - loss: 0.0428 - acc: 0.9873 - val_loss: nan - val_acc: 0.9782
+Epoch 18/20
+110288/110288 [==============================] - 27s - loss: 0.0451 - acc: 0.9870 - val_loss: nan - val_acc: 0.9753
+Epoch 19/20
+110288/110288 [==============================] - 27s - loss: 0.0431 - acc: 0.9875 - val_loss: nan - val_acc: 0.9794
+Epoch 20/20
+110288/110288 [==============================] - 27s - loss: 0.0397 - acc: 0.9887 - val_loss: nan - val_acc: 0.9763
+new jersey est parfois calme pendant l&#39; automne et il est neigeux en avril &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
 Sample 1:
 il a vu un vieux camion jaune &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
 Il a vu un vieux camion jaune
 Sample 2:
-new jersey est parfois chaud au mois mais il est est en en en &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
+new jersey est parfois calme pendant l&#39; automne et il est neigeux en avril &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
 &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt; &lt;PAD&gt;
 </pre>
 </div>
